@@ -42,14 +42,20 @@ namespace DG.NumbersToWords
             var numberRemaining = number;
             var word = "";
 
+            var needsAnd = number.ToString().Length > 2;
             while (numberRemaining > 0)
             {
-                var needsAnd = false;
+                if (numberRemaining >= 1000)
+                {
+                    var numThousands = GetThousands(numberRemaining);
+                    word += $" {_numberWordLookup[numThousands]} Thousand";
+                    numberRemaining -= (numThousands * 1000);
+                }
+
                 if (numberRemaining >= 100)
                 {
                     var numHundreds = GetHundreds(numberRemaining);
-                    word += $"{_numberWordLookup[numHundreds]} Hundred";
-                    needsAnd = true;
+                    word += $" {_numberWordLookup[numHundreds]} Hundred";
                     numberRemaining -= (numHundreds * 100);
                 }
 
@@ -62,11 +68,17 @@ namespace DG.NumbersToWords
 
                     word += needsAnd ? $" and {numberWord.Value} " : $"{numberWord.Value} ";
                     numberRemaining -= numberWord.Key;
+                    needsAnd = false;
                     break;
                 }
             }
 
-            return word.TrimEnd();
+            return word.Trim();
+        }
+
+        private int GetThousands(int number)
+        {
+            return number /= 1000;
         }
 
         private static int GetHundreds(int number)

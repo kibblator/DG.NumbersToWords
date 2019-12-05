@@ -115,7 +115,23 @@ namespace DG.NumbersToWordsTests
             //Act
             var wordString = converterService.ConvertNumberToWord(number);
 
-            //Assert again
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
+
+        [Test]
+        [TestCase(1001, "One Thousand and One")]
+        [TestCase(1852, "One Thousand Eight Hundred and Fifty Two")]
+        [TestCase(6011, "Six Thousand and Eleven")]
+        public void AddThousands_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
     }
