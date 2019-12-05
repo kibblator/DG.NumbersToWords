@@ -1,3 +1,4 @@
+using DG.NumbersToWords;
 using NUnit.Framework;
 
 namespace DG.NumbersToWordsTests
@@ -14,9 +15,16 @@ namespace DG.NumbersToWordsTests
         [TestCase(7, "Seven")]
         [TestCase(8, "Eight")]
         [TestCase(9, "Nine")]
-        public void SingleNumber_DisplaysInWords(int number, string expectedWord)
+        public void SingleNumber_DisplaysInWords(int number, string expectedWordString)
         {
-            Assert.Pass();
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
     }
 }
