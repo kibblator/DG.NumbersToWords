@@ -60,7 +60,7 @@ namespace DG.NumbersToWords
                         continue;
                     }
 
-                    word += needsAnd ? $"and {numberWord.Value} " : $"{numberWord.Value} ";
+                    word += needsAnd ? $" and {numberWord.Value} " : $"{numberWord.Value} ";
                     numberRemaining -= numberWord.Key;
                     break;
                 }

@@ -102,5 +102,21 @@ namespace DG.NumbersToWordsTests
             //Assert
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
+
+        [Test]
+        [TestCase(101, "One Hundred and One")]
+        [TestCase(286, "Two Hundred and Eighty Six")]
+        [TestCase(915, "Nine Hundred and Fifteen")]
+        public void MixHundredsAndTens_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
     }
 }
