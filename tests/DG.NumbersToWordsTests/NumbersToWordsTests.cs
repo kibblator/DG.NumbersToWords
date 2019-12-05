@@ -115,7 +115,7 @@ namespace DG.NumbersToWordsTests
             //Act
             var wordString = converterService.ConvertNumberToWord(number);
 
-            //Assert
+            //Assert again
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
     }
