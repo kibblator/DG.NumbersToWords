@@ -70,5 +70,21 @@ namespace DG.NumbersToWordsTests
             //Assert
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
+
+        [Test]
+        [TestCase(21, "Twenty One")]
+        [TestCase(46, "Forty Six")]
+        [TestCase(93, "Ninety Three")]
+        public void MixTensAndUnits_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
     }
 }

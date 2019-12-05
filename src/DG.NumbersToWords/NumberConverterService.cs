@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DG.NumbersToWords
 {
@@ -37,7 +38,25 @@ namespace DG.NumbersToWords
 
         public string ConvertNumberToWord(int number)
         {
-            return _numberWordLookup[number];
+            var numberRemaining = number;
+            var word = "";
+
+            while (numberRemaining > 0)
+            {
+                foreach (var numberWord in _numberWordLookup.OrderByDescending(n => n.Key))
+                {
+                    if (numberWord.Key > numberRemaining)
+                    {
+                        continue;
+                    }
+
+                    word += $"{numberWord.Value} ";
+                    numberRemaining -= numberWord.Key;
+                    break;
+                }
+            }
+
+            return word.TrimEnd();
         }
     }
 }
