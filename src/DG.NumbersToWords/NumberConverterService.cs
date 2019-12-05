@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace DG.NumbersToWords
 {
@@ -33,7 +34,7 @@ namespace DG.NumbersToWords
             {60, "Sixty" },
             {70, "Seventy" },
             {80, "Eighty" },
-            {90, "Ninety" },
+            {90, "Ninety" }
         };
 
         public string ConvertNumberToWord(int number)
@@ -43,6 +44,15 @@ namespace DG.NumbersToWords
 
             while (numberRemaining > 0)
             {
+                var needsAnd = false;
+                if (numberRemaining >= 100)
+                {
+                    var numHundreds = GetHundreds(numberRemaining);
+                    word += $"{_numberWordLookup[numHundreds]} Hundred";
+                    needsAnd = true;
+                    numberRemaining -= (numHundreds * 100);
+                }
+
                 foreach (var numberWord in _numberWordLookup.OrderByDescending(n => n.Key))
                 {
                     if (numberWord.Key > numberRemaining)
@@ -50,13 +60,18 @@ namespace DG.NumbersToWords
                         continue;
                     }
 
-                    word += $"{numberWord.Value} ";
+                    word += needsAnd ? $"and {numberWord.Value} " : $"{numberWord.Value} ";
                     numberRemaining -= numberWord.Key;
                     break;
                 }
             }
 
             return word.TrimEnd();
+        }
+
+        private static int GetHundreds(int number)
+        {
+            return number /= 100;
         }
     }
 }
