@@ -42,23 +42,25 @@ namespace DG.NumbersToWords
             var numberRemaining = number;
             var word = "";
 
-            var needsAnd = number.ToString().Length > 2;
+            if (numberRemaining >= 1000)
+            {
+                var numThousands = GetThousands(numberRemaining);
+                word += $" {_numberWordLookup[numThousands]} Thousand";
+                numberRemaining -= (numThousands * 1000);
+            }
+
+            if (numberRemaining >= 100)
+            {
+                var numHundreds = GetHundreds(numberRemaining);
+                word += $" {_numberWordLookup[numHundreds]} Hundred";
+                numberRemaining -= (numHundreds * 100);
+            }
+
+            var needsAnd = number.ToString().Length > 2 && numberRemaining > 0;
+
+            var lessThanHundredWord = "";
             while (numberRemaining > 0)
             {
-                if (numberRemaining >= 1000)
-                {
-                    var numThousands = GetThousands(numberRemaining);
-                    word += $" {_numberWordLookup[numThousands]} Thousand";
-                    numberRemaining -= (numThousands * 1000);
-                }
-
-                if (numberRemaining >= 100)
-                {
-                    var numHundreds = GetHundreds(numberRemaining);
-                    word += $" {_numberWordLookup[numHundreds]} Hundred";
-                    numberRemaining -= (numHundreds * 100);
-                }
-
                 foreach (var numberWord in _numberWordLookup.OrderByDescending(n => n.Key))
                 {
                     if (numberWord.Key > numberRemaining)
@@ -66,12 +68,13 @@ namespace DG.NumbersToWords
                         continue;
                     }
 
-                    word += needsAnd ? $" and {numberWord.Value} " : $"{numberWord.Value} ";
+                    lessThanHundredWord += $"{numberWord.Value} ";
                     numberRemaining -= numberWord.Key;
-                    needsAnd = false;
                     break;
                 }
             }
+
+            word += needsAnd ? $" and {lessThanHundredWord} " : $" {lessThanHundredWord} ";
 
             return word.Trim();
         }
