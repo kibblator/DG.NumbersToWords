@@ -186,5 +186,22 @@ namespace DG.NumbersToWordsTests
             //Assert
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
+
+        [Test]
+        [TestCase(-0, "Zero")]
+        [TestCase(-1, "Minus One")]
+        [TestCase(-999919, "Minus Nine Hundred and Ninety Nine Thousand Nine Hundred and Nineteen")]
+        [TestCase(-999999, "Minus Nine Hundred and Ninety Nine Thousand Nine Hundred and Ninety Nine")]
+        public void MinusNumbers_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
     }
 }

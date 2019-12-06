@@ -38,17 +38,26 @@ namespace DG.NumbersToWords
 
         public string ConvertNumberToWord(int number)
         {
-            var numberRemaining = number;
             var word = "";
-
-            if (numberRemaining >= 1000)
+            if (number < 0)
             {
-                var thousandWord = GetThousandWord(numberRemaining);
-                numberRemaining -= thousandWord.Key;
+                number *= -1;
+                word += "Minus";
+            }
+
+            if (number == 0)
+            {
+                return "Zero";
+            }
+
+            if (number >= 1000)
+            {
+                var thousandWord = GetThousandWord(number);
+                number -= thousandWord.Key;
                 word += thousandWord.Value;
             }
 
-            word += GetHundredWord(numberRemaining).Value;
+            word += GetHundredWord(number).Value;
 
             return word.Trim();
         }
