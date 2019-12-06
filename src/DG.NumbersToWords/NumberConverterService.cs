@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace DG.NumbersToWords
 {
@@ -44,25 +43,44 @@ namespace DG.NumbersToWords
 
             if (numberRemaining >= 1000)
             {
-                var numThousands = GetThousands(numberRemaining);
-                word += $"{GetLessThanHundredWord(numThousands)} Thousand";
-                numberRemaining -= (numThousands * 1000);
+                var thousandWord = GetThousandWord(numberRemaining);
+                numberRemaining -= thousandWord.Key;
+                word += thousandWord.Value;
             }
 
-            if (numberRemaining >= 100)
-            {
-                var numHundreds = GetHundreds(numberRemaining);
-                word += $"{GetLessThanHundredWord(numHundreds)} Hundred";
-                numberRemaining -= (numHundreds * 100);
-            }
-
-            var needsAnd = number.ToString().Length > 2 && numberRemaining > 0;
-
-            var lessThanHundredWord = GetLessThanHundredWord(numberRemaining);
-
-            word += needsAnd ? $" and{lessThanHundredWord} " : $" {lessThanHundredWord} ";
+            word += GetHundredWord(numberRemaining).Value;
 
             return word.Trim();
+        }
+
+        private KeyValuePair<int, string> GetThousandWord(int number)
+        {
+            var numThousands = GetThousands(number);
+            var thousandWord = $"{GetHundredWord(numThousands).Value} Thousand";
+            var thousandsDetected = numThousands * 1000;
+
+            number -= thousandsDetected;
+            thousandWord += number > 0 && number.ToString().Length != 3 ? $" and" : "";
+            return new KeyValuePair<int, string>(thousandsDetected, thousandWord);
+        }
+
+        private KeyValuePair<int, string> GetHundredWord(int number)
+        {
+            var hundredWord = "";
+            if (number >= 100)
+            {
+                var numHundreds = GetHundreds(number);
+                hundredWord = $"{GetLessThanHundredWord(numHundreds)} Hundred";
+                var hundredsDetected = numHundreds * 100;
+
+                number -= hundredsDetected;
+                hundredWord += number > 0 ? $" and" : "";
+            }
+
+            var lessThanHundredWord = GetLessThanHundredWord(number);
+            hundredWord += lessThanHundredWord;
+
+            return new KeyValuePair<int, string>(0, hundredWord);
         }
 
         private string GetLessThanHundredWord(int numberRemaining)
@@ -79,7 +97,6 @@ namespace DG.NumbersToWords
 
                     lessThanHundredWord += $" {numberWord.Value}";
                     numberRemaining -= numberWord.Key;
-                    break;
                 }
             }
 

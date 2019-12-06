@@ -153,5 +153,38 @@ namespace DG.NumbersToWordsTests
             //Assert
             Assert.That(wordString, Is.EqualTo(expectedWordString));
         }
+
+        [Test]
+        [TestCase(100001, "One Hundred Thousand and One")]
+        [TestCase(100000, "One Hundred Thousand")]
+        [TestCase(600064, "Six Hundred Thousand and Sixty Four")]
+        public void AddHundredsOfThousands_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
+
+        [Test]
+        [TestCase(899901, "Eight Hundred and Ninety Nine Thousand Nine Hundred and One")]
+        [TestCase(899900, "Eight Hundred and Ninety Nine Thousand Nine Hundred")]
+        [TestCase(899912, "Eight Hundred and Ninety Nine Thousand Nine Hundred and Twelve")]
+        [TestCase(999999, "Nine Hundred and Ninety Nine Thousand Nine Hundred and Ninety Nine")]
+        public void MaxNumbers_ShowsCorrectWords(int number, string expectedWordString)
+        {
+            //Arrange
+            var converterService = new NumberConverterService();
+
+            //Act
+            var wordString = converterService.ConvertNumberToWord(number);
+
+            //Assert
+            Assert.That(wordString, Is.EqualTo(expectedWordString));
+        }
     }
 }
