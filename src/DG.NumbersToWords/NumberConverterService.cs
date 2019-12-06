@@ -45,19 +45,28 @@ namespace DG.NumbersToWords
             if (numberRemaining >= 1000)
             {
                 var numThousands = GetThousands(numberRemaining);
-                word += $" {_numberWordLookup[numThousands]} Thousand";
+                word += $"{GetLessThanHundredWord(numThousands)} Thousand";
                 numberRemaining -= (numThousands * 1000);
             }
 
             if (numberRemaining >= 100)
             {
                 var numHundreds = GetHundreds(numberRemaining);
-                word += $" {_numberWordLookup[numHundreds]} Hundred";
+                word += $"{GetLessThanHundredWord(numHundreds)} Hundred";
                 numberRemaining -= (numHundreds * 100);
             }
 
             var needsAnd = number.ToString().Length > 2 && numberRemaining > 0;
 
+            var lessThanHundredWord = GetLessThanHundredWord(numberRemaining);
+
+            word += needsAnd ? $" and{lessThanHundredWord} " : $" {lessThanHundredWord} ";
+
+            return word.Trim();
+        }
+
+        private string GetLessThanHundredWord(int numberRemaining)
+        {
             var lessThanHundredWord = "";
             while (numberRemaining > 0)
             {
@@ -68,15 +77,13 @@ namespace DG.NumbersToWords
                         continue;
                     }
 
-                    lessThanHundredWord += $"{numberWord.Value} ";
+                    lessThanHundredWord += $" {numberWord.Value}";
                     numberRemaining -= numberWord.Key;
                     break;
                 }
             }
 
-            word += needsAnd ? $" and {lessThanHundredWord} " : $" {lessThanHundredWord} ";
-
-            return word.Trim();
+            return lessThanHundredWord;
         }
 
         private int GetThousands(int number)
